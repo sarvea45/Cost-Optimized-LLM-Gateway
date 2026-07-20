@@ -1,0 +1,15 @@
+fastapi
+uvicorn
+litellm
+redis
+sqlalchemy
+asyncpg
+psycopg2-binary
+pydantic
+pydantic-settings
+tiktoken
+pytest
+pytest-asyncio
+httpx
+pyyaml
+python-dotenv
