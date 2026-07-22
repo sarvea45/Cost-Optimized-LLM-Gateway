@@ -2,7 +2,7 @@ import json
 import numpy as np
 from redis.asyncio import Redis
 from redis.commands.search.field import VectorField, TextField
-from redis.commands.search.indexDefinition import IndexDefinition, IndexType
+from redis.commands.search.index_definition import IndexDefinition, IndexType
 from redis.exceptions import ResponseError
 from litellm import acompletion
 from app.config import settings, yaml_config
