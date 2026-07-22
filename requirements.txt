@@ -13,3 +13,4 @@ pytest-asyncio
 httpx
 pyyaml
 python-dotenv
+numpy
