@@ -11,6 +11,7 @@ from app.core.router import get_model_tier, get_model_name
 from app.core.orchestrator import execute_llm_call
 from app.core.cache import get_embedding, check_cache, save_to_cache
 from app.config import yaml_config
+from litellm import acompletion
 from litellm.utils import completion_cost
 
 router = APIRouter(prefix="/v1")
@@ -64,7 +65,6 @@ async def create_completion(
             # Calculating cost is not easily returned from get_embedding unless we modify it, 
             # so let's call acompletion directly here or modify get_embedding later. 
             # Actually I'll use it as is, and just fetch cost directly.
-            from litellm import acompletion
             embedding_model = yaml_config.get("models", {}).get("embedding", "text-embedding-3-small")
             emb_resp = await acompletion(model=embedding_model, input=cleaned_prompt)
             embedding = emb_resp.data[0]["embedding"]

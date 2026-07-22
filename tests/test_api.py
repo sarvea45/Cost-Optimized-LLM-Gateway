@@ -1,5 +1,5 @@
 import pytest
-from httpx import AsyncClient
+from httpx import AsyncClient, ASGITransport
 from unittest.mock import patch
 from app.main import app
 from litellm import exceptions
@@ -22,7 +22,7 @@ def anyio_backend():
 @patch('app.core.orchestrator.completion_cost', return_value=0.01)
 @patch('app.api.endpoints.completion_cost', return_value=0.001)
 @patch('app.core.orchestrator.acompletion')
-@patch('litellm.acompletion')
+@patch('app.api.endpoints.acompletion')
 @patch('app.api.endpoints.check_cache', return_value=None)
 @patch('app.api.endpoints.save_to_cache')
 async def test_fallback_mechanism(mock_save, mock_check, mock_end_acompletion, mock_orch_acompletion, mock_cost1, mock_cost2):
@@ -34,7 +34,8 @@ async def test_fallback_mechanism(mock_save, mock_check, mock_end_acompletion, m
         MockResponse("Backup response")
     ]
     
-    async with AsyncClient(app=app, base_url="http://test") as ac:
+    # FIXED: Replaced app=app with transport=ASGITransport(app=app)
+    async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as ac:
         response = await ac.post("/v1/completions", json={
             "prompt": "Test fallback",
             "user_id": "test_user"
