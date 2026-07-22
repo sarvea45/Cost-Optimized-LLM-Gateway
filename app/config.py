@@ -7,9 +7,8 @@ class Settings(BaseSettings):
     redis_url: str = "redis://localhost:6379/0"
     
     # API Keys (loaded from env)
-    openai_api_key: str = ""
-    anthropic_api_key: str = ""
     groq_api_key: str = ""
+    gemini_api_key: str = ""
 
     class Config:
         env_file = ".env"

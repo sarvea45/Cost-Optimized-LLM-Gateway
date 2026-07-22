@@ -1,8 +1,8 @@
 models:
-  high_tier: "gpt-4o"
-  mid_tier: "claude-3-5-sonnet-20240620"
+  high_tier: "groq/llama-3.1-70b-versatile"
+  mid_tier: "gemini/gemini-1.5-flash"
   low_tier: "groq/llama3-8b-8192"
-  embedding: "text-embedding-3-small"
+  embedding: "gemini/text-embedding-004"
 
 caching:
   enabled: true
@@ -23,9 +23,9 @@ routing_rules:
     target_tier: "low_tier"
 
 fallbacks:
-  - primary: "gpt-4o"
-    backup: "claude-3-5-sonnet-20240620"
+  - primary: "groq/llama-3.1-70b-versatile"
+    backup: "gemini/gemini-1.5-flash"
   - primary: "groq/llama3-8b-8192"
-    backup: "gpt-3.5-turbo"
-  - primary: "claude-3-5-sonnet-20240620"
-    backup: "gpt-4o"
+    backup: "gemini/gemini-1.5-flash"
+  - primary: "gemini/gemini-1.5-flash"
+    backup: "groq/llama-3.1-70b-versatile"
