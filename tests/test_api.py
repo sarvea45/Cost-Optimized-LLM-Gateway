@@ -22,7 +22,7 @@ def anyio_backend():
 @patch('app.core.orchestrator.completion_cost', return_value=0.01)
 @patch('app.api.endpoints.completion_cost', return_value=0.001)
 @patch('app.core.orchestrator.acompletion')
-@patch('app.api.endpoints.acompletion')
+@patch('litellm.acompletion')
 @patch('app.api.endpoints.check_cache', return_value=None)
 @patch('app.api.endpoints.save_to_cache')
 async def test_fallback_mechanism(mock_save, mock_check, mock_end_acompletion, mock_orch_acompletion, mock_cost1, mock_cost2):
