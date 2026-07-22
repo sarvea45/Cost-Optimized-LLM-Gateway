@@ -30,7 +30,7 @@ async def test_fallback_mechanism(mock_save, mock_check, mock_end_acompletion, m
     
     # Simulate RateLimitError on first try, then success on backup
     mock_orch_acompletion.side_effect = [
-        exceptions.RateLimitError("Rate limited", response=None, llm_provider=""),
+        exceptions.RateLimitError("Rate limited", response=None, llm_provider="", model="mock-model"),
         MockResponse("Backup response")
     ]
     
