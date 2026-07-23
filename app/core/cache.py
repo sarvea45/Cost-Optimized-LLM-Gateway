@@ -22,7 +22,7 @@ async def init_redis_index():
                 "FLAT",
                 {
                     "TYPE": "FLOAT32",
-                    "DIM": 768, # gemini embedding dimension
+                    "DIM": 3072, # gemini embedding dimension
                     "DISTANCE_METRIC": "COSINE"
                 }
             )
