@@ -1,7 +1,7 @@
 models:
   high_tier: "groq/llama-3.3-70b-versatile"
   mid_tier: "gemini/gemini-1.5-flash"
-  low_tier: "groq/llama3-8b-8192"
+  low_tier: "groq/llama-3.1-8b-instant"
   embedding: "gemini/text-embedding-004"
 
 caching:
@@ -25,7 +25,7 @@ routing_rules:
 fallbacks:
   - primary: "groq/llama-3.3-70b-versatile"
     backup: "gemini/gemini-1.5-flash"
-  - primary: "groq/llama3-8b-8192"
+  - primary: "groq/llama-3.1-8b-instant"
     backup: "gemini/gemini-1.5-flash"
   - primary: "gemini/gemini-1.5-flash"
     backup: "groq/llama-3.3-70b-versatile"

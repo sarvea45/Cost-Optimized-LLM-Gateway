@@ -17,7 +17,7 @@ async def execute_llm_call(model_name: str, prompt: str):
         except Exception:
             cost = 0.0
         return response, model_name, cost
-    except (exceptions.RateLimitError, exceptions.APIConnectionError) as e:
+    except (exceptions.RateLimitError, exceptions.APIConnectionError, exceptions.BadRequestError) as e:
         if backup_model:
             print(f"Primary model {model_name} failed. Falling back to {backup_model}")
             response = await acompletion(model=backup_model, messages=[{"role": "user", "content": prompt}])
