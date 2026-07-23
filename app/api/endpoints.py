@@ -61,7 +61,7 @@ async def create_completion(
     if cache_enabled:
         try:
             embedding_model = yaml_config.get("models", {}).get("embedding", "text-embedding-3-small")
-            emb_resp = await aembedding(model=embedding_model, input=cleaned_prompt)
+            emb_resp = await aembedding(model=embedding_model, input=[cleaned_prompt])
             embedding = emb_resp.data[0]["embedding"]
             try:
                 embedding_cost = completion_cost(completion_response=emb_resp, model=embedding_model) or 0.0
