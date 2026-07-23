@@ -24,8 +24,6 @@ routing_rules:
 
 fallbacks:
   - primary: "groq/llama-3.3-70b-versatile"
-    backup: "gemini/gemini-1.5-flash"
+    backup: "groq/llama-3.1-8b-instant"
   - primary: "groq/llama-3.1-8b-instant"
-    backup: "gemini/gemini-1.5-flash"
-  - primary: "gemini/gemini-1.5-flash"
     backup: "groq/llama-3.3-70b-versatile"
