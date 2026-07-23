@@ -11,7 +11,7 @@ from app.core.router import get_model_tier, get_model_name
 from app.core.orchestrator import execute_llm_call
 from app.core.cache import get_embedding, check_cache, save_to_cache
 from app.config import yaml_config
-from litellm import acompletion
+from litellm import acompletion, aembedding
 from litellm.utils import completion_cost
 
 router = APIRouter(prefix="/v1")
@@ -46,7 +46,7 @@ async def create_completion(
     background_tasks: BackgroundTasks,
     db: AsyncSession = Depends(get_db)
 ):
-    start_time = datetime.now(timezone.utc)
+    start_time = datetime.utcnow()
     
     # 1. Preprocessing
     cleaned_prompt = clean_prompt(request.prompt)
@@ -66,13 +66,16 @@ async def create_completion(
             # so let's call acompletion directly here or modify get_embedding later. 
             # Actually I'll use it as is, and just fetch cost directly.
             embedding_model = yaml_config.get("models", {}).get("embedding", "text-embedding-3-small")
-            emb_resp = await acompletion(model=embedding_model, input=cleaned_prompt)
+            emb_resp = await aembedding(model=embedding_model, input=cleaned_prompt)
             embedding = emb_resp.data[0]["embedding"]
-            embedding_cost = completion_cost(emb_resp) or 0.0
+            try:
+                embedding_cost = completion_cost(completion_response=emb_resp, model=embedding_model) or 0.0
+            except Exception:
+                embedding_cost = 0.0
             
             cached_text = await check_cache(embedding, similarity_threshold)
             if cached_text:
-                latency = (datetime.now(timezone.utc) - start_time).total_seconds() * 1000
+                latency = (datetime.utcnow() - start_time).total_seconds() * 1000
                 background_tasks.add_task(
                     log_request_to_db, db, request.user_id, "cache", 0, 0, latency, embedding_cost, True
                 )
@@ -96,7 +99,7 @@ async def create_completion(
     prompt_tokens = llm_resp.usage.prompt_tokens if hasattr(llm_resp, 'usage') else 0
     completion_tokens = llm_resp.usage.completion_tokens if hasattr(llm_resp, 'usage') else 0
     
-    latency = (datetime.now(timezone.utc) - start_time).total_seconds() * 1000
+    latency = (datetime.utcnow() - start_time).total_seconds() * 1000
     total_cost = (llm_cost or 0.0) + embedding_cost
     
     if cache_enabled and embedding:

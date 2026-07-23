@@ -12,13 +12,19 @@ async def execute_llm_call(model_name: str, prompt: str):
             
     try:
         response = await acompletion(model=model_name, messages=[{"role": "user", "content": prompt}])
-        cost = completion_cost(response)
+        try:
+            cost = completion_cost(completion_response=response, model=model_name)
+        except Exception:
+            cost = 0.0
         return response, model_name, cost
     except (exceptions.RateLimitError, exceptions.APIConnectionError) as e:
         if backup_model:
             print(f"Primary model {model_name} failed. Falling back to {backup_model}")
             response = await acompletion(model=backup_model, messages=[{"role": "user", "content": prompt}])
-            cost = completion_cost(response)
+            try:
+                cost = completion_cost(completion_response=response, model=backup_model)
+            except Exception:
+                cost = 0.0
             return response, backup_model, cost
         else:
             raise e
