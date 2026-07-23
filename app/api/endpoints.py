@@ -60,11 +60,6 @@ async def create_completion(
     embedding_cost = 0.0
     if cache_enabled:
         try:
-            # We already have get_embedding in app.core.cache, let's use it
-            embedding = await get_embedding(cleaned_prompt)
-            # Calculating cost is not easily returned from get_embedding unless we modify it, 
-            # so let's call acompletion directly here or modify get_embedding later. 
-            # Actually I'll use it as is, and just fetch cost directly.
             embedding_model = yaml_config.get("models", {}).get("embedding", "text-embedding-3-small")
             emb_resp = await aembedding(model=embedding_model, input=cleaned_prompt)
             embedding = emb_resp.data[0]["embedding"]

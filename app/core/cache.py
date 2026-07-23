@@ -4,7 +4,7 @@ from redis.asyncio import Redis
 from redis.commands.search.field import VectorField, TextField
 from redis.commands.search.index_definition import IndexDefinition, IndexType
 from redis.exceptions import ResponseError
-from litellm import acompletion
+from litellm import acompletion, aembedding
 from app.config import settings, yaml_config
 
 redis_client = Redis.from_url(settings.redis_url, decode_responses=False)
@@ -32,7 +32,7 @@ async def init_redis_index():
 
 async def get_embedding(text: str) -> list[float]:
     model = yaml_config.get("models", {}).get("embedding", "text-embedding-3-small")
-    response = await acompletion(model=model, input=text)
+    response = await aembedding(model=model, input=text)
     return response.data[0]["embedding"]
 
 async def check_cache(embedding: list[float], threshold: float) -> str | None:
